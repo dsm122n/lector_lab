@@ -217,7 +217,6 @@ for i, archivo in enumerate(archivos_pdf):
                 laboratorio.at[i, "Tiempo de protrombina %"] = re.search(patron, examen).group()
             if examen.find("TTPK") >= 0:
                 laboratorio.at[i, "TTPK"] = re.search(patron, examen).group()
-
 print(laboratorio)
 final = laboratorio.transpose()
 print(final)
