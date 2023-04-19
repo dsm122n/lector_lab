@@ -3,7 +3,7 @@ import numpy as np
 import re 
 import pdfplumber
 from io import StringIO
-from datetime import date
+from datetime import datetime
 
 from os import listdir
 from os.path import isfile, join
@@ -11,57 +11,58 @@ from os.path import isfile, join
 archivos_pdf = [f for f in listdir("laboratorio pdf") if isfile(join("laboratorio pdf", f))]
 print(archivos_pdf)
 
-laboratorio = pd.DataFrame({"Fecha": pd.Series(dtype = "str"),
-                            "Hora": pd.Series(dtype = "str"),
-                            "Creatinina": pd.Series(dtype ="str"),
-                            "BUN": pd.Series(dtype ="str"),
-                            "Ca++": pd.Series(dtype ="str"),
-                            "Calcio Total": pd.Series(dtype ="str"),
-                            "Fosforo": pd.Series(dtype ="str"),
-                            "LDH": pd.Series(dtype ="str"),
-                            "Magnesio": pd.Series(dtype ="str"),
-                            "Sodio ( Na )": pd.Series(dtype ="str"),
-                            "Potasio ( K )": pd.Series(dtype ="str"),
-                            "Cloro ( Cl )": pd.Series(dtype ="str"),
-                            "Bilirrubina total": pd.Series(dtype ="str"),
-                            "Bilirrubina directa": pd.Series(dtype ="str"),
-                            "ASAT/GOT": pd.Series(dtype ="str"),
-                            "ALAT/GPT": pd.Series(dtype ="str"),
-                            "Gama GT": pd.Series(dtype ="str"),
-                            "Fosfatasas Alcalinas": pd.Series(dtype ="str"),
-                            "PCR": pd.Series(dtype ="str"),
-                            "Lactato": pd.Series(dtype ="str"),
-                            "Albumina": pd.Series(dtype ="str"),
-                            "Proteinas totales": pd.Series(dtype ="str"),
-                            "Glucosa": pd.Series(dtype ="str"),
-                            "Trigliceridos": pd.Series(dtype ="str"),
-                            "CK Total": pd.Series(dtype ="str"),
-                            "CK MB": pd.Series(dtype ="str"),
-                            "Troponina I": pd.Series(dtype ="str"),
-                            "proBNP": pd.Series(dtype ="str"),
-                            "Hb": pd.Series(dtype ="str"),
-                            "VCM": pd.Series(dtype ="str"),
-                            "HCM": pd.Series(dtype ="str"),
-                            "CHCM": pd.Series(dtype ="str"),
-                            "Recuento de Plaquetas": pd.Series(dtype ="str"),
-                            "Recuento Leucocitos": pd.Series(dtype ="str"),
-                            "Segmentados": pd.Series(dtype ="str"),
-                            "Eosinófilos": pd.Series(dtype ="str"),
-                            "Linfocitos": pd.Series(dtype ="str"),
-                            "Monocitos": pd.Series(dtype ="str"),
-                            "Basófilos": pd.Series(dtype ="str"),
-                            "INR": pd.Series(dtype ="str"),
-                            "Tiempo de protrombina %": pd.Series(dtype ="str"),
-                            "TTPK": pd.Series(dtype ="str"),
-                            "pH": pd.Series(dtype ="str"),
-                            "pO2": pd.Series(dtype ="str"),
-                            "pCO2": pd.Series(dtype ="str"),
-                            "HCO3-": pd.Series(dtype ="str"),
-                            "BE (B)": pd.Series(dtype ="str"),
-                            "sO2": pd.Series(dtype ="str")
+laboratorio = pd.DataFrame({"Fecha": [""],
+                            "Hora": [""],
+                            "Creatinina": [""],
+                            "BUN": [""],
+                            "Ca++": [""],
+                            "Calcio Total": [""],
+                            "Fosforo": [""],
+                            "LDH": [""],
+                            "Magnesio": [""],
+                            "Sodio ( Na )": [""],
+                            "Potasio ( K )": [""],
+                            "Cloro ( Cl )": [""],
+                            "Bilirrubina total": [""],
+                            "Bilirrubina directa": [""],
+                            "ASAT/GOT": [""],
+                            "ALAT/GPT": [""],
+                            "Gama GT": [""],
+                            "Fosfatasas Alcalinas": [""],
+                            "PCR": [""],
+                            "Lactato": [""],
+                            "Albumina": [""],
+                            "Proteinas totales": [""],
+                            "Glucosa": [""],
+                            "Trigliceridos": [""],
+                            "CK Total": [""],
+                            "CK MB": [""],
+                            "Troponina I": [""],
+                            "proBNP": [""],
+                            "Hb": [""],
+                            "VCM": [""],
+                            "HCM": [""],
+                            "CHCM": [""],
+                            "Recuento de Plaquetas": [""],
+                            "Recuento Leucocitos": [""],
+                            "Segmentados": [""],
+                            "Eosinófilos": [""],
+                            "Linfocitos": [""],
+                            "Monocitos": [""],
+                            "Basófilos": [""],
+                            "INR": [""],
+                            "Tiempo de protrombina %": [""],
+                            "TTPK": [""],
+                            "pH": [""],
+                            "pO2": [""],
+                            "pCO2": [""],
+                            "HCO3-": [""],
+                            "BE (B)": [""],
+                            "sO2": [""]
                             })
 
-patron = r" [-+]?\d*\,\d+ | \d+ " #patron para encontrar numeros con decimales
+patron = r" [-+]?\d+\,*\d*" #patron para encontrar numeros con decimales
+
 for i, archivo in enumerate(archivos_pdf):
     pdf = pdfplumber.open("laboratorio pdf/" + archivo)
     print(f"\n\ntexto extraido de ----> {archivo}\n\n")
@@ -69,12 +70,15 @@ for i, archivo in enumerate(archivos_pdf):
     posicion_fecha = page.extract_text().find("Fecha y Hora Ingreso Solicitud :") + 32
     posicion_hora = page.extract_text().find("Fecha y Hora Ingreso Solicitud :") + 43
     fecha = page.extract_text()[posicion_fecha:posicion_fecha+10]
-    laboratorio.loc[i, "Fecha"] = fecha
+    fecha = datetime.strptime(fecha, '%d-%m-%Y').date()
+    laboratorio.loc[i, "Fecha"] = fecha.strftime('%d-%m-%Y')
     hora = page.extract_text()[posicion_hora:posicion_hora+5]
+    hora = datetime.strptime(hora, '%H:%M').time()
     laboratorio.loc[i, "Hora"] = hora
     print(f"primer ciclo:{i}")
     for j in range(len(pdf.pages)):
-        pagina_actual = pdf.pages[j].crop((28.35, 212.6, 583.65, 680)) # las medidas están en pts
+        pagina_actual = pdf.pages[j]
+        #.crop((28.35, 212.6, 583.65, 680)) # las medidas están en pts
         data = pd.DataFrame(pagina_actual.extract_text().split("\n"))
         for k in range(len(data)):
             if data.at[k, 0].find(":") < 0 or data.at[k, 0].find("Fecha y Hora Ingreso Solicitud") > 0 or data.at[k, 0].find("Tipo de Muestra") > 0 or data.at[k, 0].find("Tipo de muestra") > 0 or data.at[k, 0].find("Criterio de rechazo") > 0:
@@ -84,100 +88,100 @@ for i, archivo in enumerate(archivos_pdf):
         # lab_limpio = data.loc[data[1]==":"].reset_index(drop=False) 
         print(f"segundo ciclo:{j}")
         for k, examen in enumerate(data.loc[:, 0]):
-            if examen.find("Creatinina") >= 0:
+            if examen.find("Creatinina") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Creatinina"] = re.search(patron, examen).group()
-            if examen.find("BUN") >= 0:
+            if examen.find("BUN") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "BUN"] = re.search(patron, examen).group()
-            if examen.find("Ca++") >= 0:
+            if examen.find("Ca++") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Ca++"] = re.search(patron, examen).group()
-            if examen.find("Calcio Total") >= 0:
+            if examen.find("Calcio Total") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Calcio Total"] = re.search(patron, examen).group()
-            if examen.find("Fosforo") >= 0:
+            if examen.find("Fosforo") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Fosforo"] = re.search(patron, examen).group()
-            if examen.find("LDH") >= 0:
+            if examen.find("LDH") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "LDH"] = re.search(patron, examen).group()
-            if examen.find("Magnesio") >= 0:
+            if examen.find("Magnesio") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Magnesio"] = re.search(patron, examen).group()
-            if examen.find("Sodio ( Na )") >= 0:
+            if examen.find("Sodio ( Na )") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Sodio ( Na )"] = re.search(patron, examen).group()
-            if examen.find("Potasio ( K )") >= 0:
+            if examen.find("Potasio ( K )") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Potasio ( K )"] = re.search(patron, examen).group()
-            if examen.find("Cloro ( Cl )") >= 0:
+            if examen.find("Cloro ( Cl )") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Cloro ( Cl )"] = re.search(patron, examen).group()
-            if examen.find("Bilirrubina total") >= 0:
+            if examen.find("Bilirrubina total") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Bilirrubina total"] = re.search(patron, examen).group()
-            if examen.find("Bilirrubina directa") >= 0:
+            if examen.find("Bilirrubina directa") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Bilirrubina directa"] = re.search(patron, examen).group()
-            if examen.find("ASAT/GOT") >= 0:
+            if examen.find("ASAT/GOT") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "ASAT/GOT"] = re.search(patron, examen).group()
-            if examen.find("ALAT/GPT") >= 0:
+            if examen.find("ALAT/GPT") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "ALAT/GPT"] = re.search(patron, examen).group()
-            if examen.find("Gama GT") >= 0:
+            if examen.find("Gama GT") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Gama GT"] = re.search(patron, examen).group()
-            if examen.find("Fosfatasas Alcalinas") >= 0:
+            if examen.find("Fosfatasas Alcalinas") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Fosfatasas Alcalinas"] = re.search(patron, examen).group()
-            if examen.find("PCR") >= 0:
+            if examen.find("PCR") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "PCR"] = re.search(patron, examen).group()
-            if examen.find("Lactato") >= 0:
+            if examen.find("Lactato") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Lactato"] = re.search(patron, examen).group()
-            if examen.find("Albumina") >= 0:
+            if examen.find("Albumina") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Albumina"] = re.search(patron, examen).group()
-            if examen.find("Proteinas totales") >= 0:
+            if examen.find("Proteinas totales") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Proteinas totales"] = re.search(patron, examen).group()
-            if examen.find("Glucosa") >= 0:
+            if examen.find("Glucosa") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Glucosa"] = re.search(patron, examen).group()
-            if examen.find("Trigliceridos") >= 0:
+            if examen.find("Trigliceridos") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Trigliceridos"] = re.search(patron, examen).group()
-            if examen.find("CK Total") >= 0:
+            if examen.find("CK Total") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "CK Total"] = re.search(patron, examen).group()
-            if examen.find("CK MB") >= 0:
+            if examen.find("CK MB") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "CK MB"] = re.search(patron, examen).group()
-            if examen.find("Troponina I") >= 0:
+            if examen.find("Troponina I") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Troponina I"] = re.search(patron, examen).group()
-            if examen.find("proBNP") >= 0:
+            if examen.find("proBNP") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "proBNP"] = re.search(patron, examen).group()
-            if examen.find("Hb") >= 0:
+            if examen.find("Hb") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Hb"] = re.search(patron, examen).group()
-            if examen.find("VCM") >= 0:
+            if examen.find("VCM") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "VCM"] = re.search(patron, examen).group()
-            if examen.find("HCM") >= 0:
+            if examen.find("HCM") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "HCM"] = re.search(patron, examen).group()
-            if examen.find("CHCM") >= 0:
+            if examen.find("CHCM") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "CHCM"] = re.search(patron, examen).group()
-            if examen.find("Recuento de Plaquetas") >= 0:
+            if examen.find("Recuento de Plaquetas") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Recuento de Plaquetas"] = re.search(patron, examen).group()
-            if examen.find("Recuento Leucocitos") >= 0:
+            if examen.find("Recuento Leucocitos") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Recuento Leucocitos"] = re.search(patron, examen).group()
-            if examen.find("Segmentados") >= 0:
+            if examen.find("Segmentados") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Segmentados"] = re.search(patron, examen).group()
-            if examen.find("Eosinófilos") >= 0:
+            if examen.find("Eosinófilos") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Eosinófilos"] = re.search(patron, examen).group()
-            if examen.find("Linfocitos") >= 0:
+            if examen.find("Linfocitos") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Linfocitos"] = re.search(patron, examen).group()
-            if examen.find("Monocitos") >= 0:
+            if examen.find("Monocitos") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Monocitos"] = re.search(patron, examen).group()
-            if examen.find("Basófilos") >= 0:
+            if examen.find("Basófilos") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Basófilos"] = re.search(patron, examen).group()
-            if examen.find("INR") >= 0:
+            if examen.find("INR") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "INR"] = re.search(patron, examen).group()
-            if examen.find("Tiempo de protrombina %") >= 0:
+            if examen.find("Tiempo de protrombina %") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Tiempo de protrombina %"] = re.search(patron, examen).group()
-            if examen.find("TTPK") >= 0:
+            if examen.find("TTPK") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "TTPK"] = re.search(patron, examen).group()
-            if examen.find("pH") >= 0:
+            if examen.find("pH") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "pH"] = re.search(patron, examen).group()
-            if examen.find("pO2") >= 0:
+            if examen.find("pO2") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "pO2"] = re.search(patron, examen).group()
-            if examen.find("pCO2") >= 0:
+            if examen.find("pCO2") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "pCO2"] = re.search(patron, examen).group()
-            if examen.find("HCO3-") >= 0:
+            if examen.find("HCO3-") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "HCO3-"] = re.search(patron, examen).group()
-            if examen.find("BE (B)") >= 0:
+            if examen.find("BE (B)") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "BE (B)"] = re.search(patron, examen).group()
-            if examen.find("sO2") >= 0:
+            if examen.find("sO2") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "sO2"] = re.search(patron, examen).group()
-print(laboratorio)
+laboratorio.sort_values(by=['Fecha', 'Hora'], inplace=True, ascending=[True, True])
 final = laboratorio.transpose()
 print(final)
-laboratorio.to_csv("salida/laboratorio2.csv", index=False)
-final.to_csv("salida/final2.csv", index=False)
+final.to_csv("salida/resultados_examenes_con_comas.csv", index=False)
+final.to_csv("salida/resultados_examenes_con_puntocomas.csv", index=False, sep=";")
