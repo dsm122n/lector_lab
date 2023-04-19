@@ -183,5 +183,5 @@ for i, archivo in enumerate(archivos_pdf):
 laboratorio.sort_values(by=['Fecha', 'Hora'], inplace=True, ascending=[True, True])
 final = laboratorio.transpose()
 print(final)
-final.to_csv("salida/resultados_examenes_con_comas.csv", index=False)
-final.to_csv("salida/resultados_examenes_con_puntocomas.csv", index=False, sep=";")
+final.to_csv("salida/resultados_examenes_con_comas.csv", index=True)
+final.to_csv("salida/resultados_examenes_con_puntocomas.csv", index=True, sep=";")
