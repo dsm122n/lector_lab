@@ -1,9 +1,10 @@
 import pandas as pd
-import numpy as np
 import re 
 import pdfplumber
 from io import StringIO
 from datetime import datetime
+import tkinter as tk
+from tkinter import messagebox
 
 from os import listdir
 from os.path import isfile, join
@@ -23,8 +24,8 @@ laboratorio = pd.DataFrame({"Fecha": [""],
                             "Sodio ( Na )": [""],
                             "Potasio ( K )": [""],
                             "Cloro ( Cl )": [""],
-                            "Bilirrubina total": [""],
-                            "Bilirrubina directa": [""],
+                            "Bilirrubina Total": [""],
+                            "Bilirrubina Directa": [""],
                             "ASAT/GOT": [""],
                             "ALAT/GPT": [""],
                             "Gama GT": [""],
@@ -83,18 +84,17 @@ for i, archivo in enumerate(archivos_pdf):
         for k in range(len(data)):
             if data.at[k, 0].find(":") < 0 or data.at[k, 0].find("Fecha y Hora Ingreso Solicitud") > 0 or data.at[k, 0].find("Tipo de Muestra") > 0 or data.at[k, 0].find("Tipo de muestra") > 0 or data.at[k, 0].find("Criterio de rechazo") > 0:
                 data = data.drop(k)
-        print("\ncorriginedo\n")
-        print(data)
-        # lab_limpio = data.loc[data[1]==":"].reset_index(drop=False) 
+        # print("\ncorriginedo\n")
+        # print(data)
         print(f"segundo ciclo:{j}")
         for k, examen in enumerate(data.loc[:, 0]):
             if examen.find("Creatinina") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Creatinina"] = re.search(patron, examen).group()
-            if examen.find("BUN") >= 0 and bool(re.search(patron, examen)) == True:
+            if examen.find("Nitrogeno ureico") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "BUN"] = re.search(patron, examen).group()
             if examen.find("Ca++") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Ca++"] = re.search(patron, examen).group()
-            if examen.find("Calcio Total") >= 0 and bool(re.search(patron, examen)) == True:
+            if examen.find("Calcio") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Calcio Total"] = re.search(patron, examen).group()
             if examen.find("Fosforo") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Fosforo"] = re.search(patron, examen).group()
@@ -108,10 +108,10 @@ for i, archivo in enumerate(archivos_pdf):
                 laboratorio.at[i, "Potasio ( K )"] = re.search(patron, examen).group()
             if examen.find("Cloro ( Cl )") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Cloro ( Cl )"] = re.search(patron, examen).group()
-            if examen.find("Bilirrubina total") >= 0 and bool(re.search(patron, examen)) == True:
-                laboratorio.at[i, "Bilirrubina total"] = re.search(patron, examen).group()
-            if examen.find("Bilirrubina directa") >= 0 and bool(re.search(patron, examen)) == True:
-                laboratorio.at[i, "Bilirrubina directa"] = re.search(patron, examen).group()
+            if examen.find("Bilirrubina Total") >= 0 and bool(re.search(patron, examen)) == True:
+                laboratorio.at[i, "Bilirrubina Total"] = re.search(patron, examen).group()
+            if examen.find("Bilirrubina Directa") >= 0 and bool(re.search(patron, examen)) == True:
+                laboratorio.at[i, "Bilirrubina Directa"] = re.search(patron, examen).group()
             if examen.find("ASAT/GOT") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "ASAT/GOT"] = re.search(patron, examen).group()
             if examen.find("ALAT/GPT") >= 0 and bool(re.search(patron, examen)) == True:
@@ -126,7 +126,7 @@ for i, archivo in enumerate(archivos_pdf):
                 laboratorio.at[i, "Lactato"] = re.search(patron, examen).group()
             if examen.find("Albumina") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Albumina"] = re.search(patron, examen).group()
-            if examen.find("Proteinas totales") >= 0 and bool(re.search(patron, examen)) == True:
+            if examen.find("Proteinas") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Proteinas totales"] = re.search(patron, examen).group()
             if examen.find("Glucosa") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Glucosa"] = re.search(patron, examen).group()
@@ -140,7 +140,7 @@ for i, archivo in enumerate(archivos_pdf):
                 laboratorio.at[i, "Troponina I"] = re.search(patron, examen).group()
             if examen.find("proBNP") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "proBNP"] = re.search(patron, examen).group()
-            if examen.find("Hb") >= 0 and bool(re.search(patron, examen)) == True:
+            if examen.find("Hemoglobina") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "Hb"] = re.search(patron, examen).group()
             if examen.find("VCM") >= 0 and bool(re.search(patron, examen)) == True:
                 laboratorio.at[i, "VCM"] = re.search(patron, examen).group()
@@ -185,3 +185,8 @@ final = laboratorio.transpose()
 print(final)
 final.to_csv("salida/resultados_examenes_con_comas.csv", index=True)
 final.to_csv("salida/resultados_examenes_con_puntocomas.csv", index=True, sep=";")
+root = tk.Tk()
+root.withdraw()
+messagebox.showinfo(title="Lectura finalizada!!!", 
+                    message="La lectura veloz ha finalizado, ahora abre un archivo .csv de la carpeta \"salida\" \n\n Copia los datos y pégalos en el archivo excel de la misma carpeta \n\n Y así lo podrás imprimir :D \n\n ÉXITOOOO!!! \n\nPD: se aceptan sugerencias, avisos de errores y ***propinas***, contacte a dsm122n@gmail.com")
+root.destroy()
