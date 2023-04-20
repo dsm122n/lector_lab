@@ -185,8 +185,14 @@ final = laboratorio.transpose()
 print(final)
 final.to_csv("salida/resultados_examenes_con_comas.csv", index=True)
 final.to_csv("salida/resultados_examenes_con_puntocomas.csv", index=True, sep=";")
+
 root = tk.Tk()
 root.withdraw()
-messagebox.showinfo(title="Lectura finalizada!!!", 
-                    message="La lectura veloz ha finalizado, ahora abre un archivo .csv de la carpeta \"salida\" \n\n Copia los datos y pégalos en el archivo excel de la misma carpeta \n\n Y así lo podrás imprimir :D \n\n ÉXITOOOO!!! \n\nPD: se aceptan sugerencias, avisos de errores y ***propinas***, contacte a dsm122n@gmail.com")
-root.destroy()
+message = "La lectura veloz ha finalizado, ahora abre un archivo .csv de la carpeta \"salida\" \n\n Copia los datos y pégalos en el archivo excel de la misma carpeta \n\n Y así lo podrás imprimir :D \n\n ÉXITOOOO!!! \n\nPD: se aceptan sugerencias, avisos de errores y ***propinas***, contacte a dsm122n@gmail.com"
+top = tk.Toplevel()
+top.title("Lectura finalizada!!!")
+top.attributes("-topmost", True)  # asegura que la ventana esté siempre en primer plano
+tk.Label(top, text=message).pack(padx=20, pady=20)
+tk.Button(top, text="Cerrar", command=top.destroy).pack(pady=10)
+
+top.mainloop()
