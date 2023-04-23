@@ -3,12 +3,15 @@ Este programa intenta extraer los valores de cada examen de los informes de labo
 
 ## Cómo usar lector_lab_v2
 
-En esta versión solo debes guardar los archivos en la carpeta "laboratorio pdf", luego ejecutar "lector_lab_v2.exe" y list :) la salida queda en el documento excel "salida/Salida con resultados de examenes.xlsx" listo para imprimir
+En esta versión solo debes:
+1) guardar los archivos en la carpeta "laboratorio pdf", luego 
+2) ejecutar "lector_lab_v2.exe" y listo :) 
+
+La salida queda en el documento excel "salida/Salida con resultados de examenes.xlsx" listo para imprimir
 
 ### Algunas cosas nuevas:
 - Se agrega VHS
 - Ya no debería copiar datos de orina, pero si de liquido pleural o ascítico :( proximamente podría arreglarlo
-
 
 ## Cómo usar lector_lab_v1.1
 Descarga los pdf de los examenes en la carpeta "laboratorio pdf". 
