@@ -1,7 +1,16 @@
 # Lector informes de laboratorio
 Este programa intenta extraer los valores de cada examen de los informes de laboratorio
 
-## Cómo usar
+## Cómo usar lector_lab_v2
+
+En esta versión solo debes guardar los archivos en la carpeta "laboratorio pdf", luego ejecutar "lector_lab_v2.exe" y list :) la salida queda en el documento excel "salida/Salida con resultados de examenes.xlsx" listo para imprimir
+
+### Algunas cosas nuevas:
+- Se agrega VHS
+- Ya no debería copiar datos de orina, pero si de liquido pleural o ascítico :( proximamente podría arreglarlo
+
+
+## Cómo usar lector_lab_v1.1
 Descarga los pdf de los examenes en la carpeta "laboratorio pdf". 
 
 Ejecuta el archivo "lector_lab" y espera un momento :) se abrirá una ventana negra que mostrará el proceso y cuando esté listo aparecerá una ventana avisando que el proceso está listo. Sea paciente, se demora un tiempo
