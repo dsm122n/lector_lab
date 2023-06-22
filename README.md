@@ -1,19 +1,34 @@
 # Lector informes de laboratorio
 Este programa intenta extraer los valores de cada examen de los informes de laboratorio
-DUDAS CONSULTAR A dsm122n@gmail.com
+DUDAS y **propinas** CONSULTAR A dsm122n@gmail.com
 
-## Cómo usar lector_lab_v2
+El extraible y los video-tutoriales se encuentran en **https://drive.google.com/drive/folders/1FOo07qSXZFGCe7Yr27_Hqn-yNu6RSnbj?usp=sharing**
+
+Más información y el programa en python en **https://github.com/dsm122n/lector_lab**
+
+
+## Cómo usar lector_lab_v2.3
 
 En esta versión solo debes:
-1) guardar los archivos en la carpeta "laboratorio pdf", luego 
-2) ejecutar "lector_lab_v2.exe" y listo :) 
+1) **guardar los informes** de laboratorio formato pdf en la carpeta "laboratorio pdf", luego 
+2) **ejecutar** "lector_lab_v2.exe" y listo :) 
+3) La salida queda en el documento excel **"salida/00 Imprimir resultados.xlsx"** listo para **imprimir**. 
+4) Luego de imprimir el documento, **elimina los pdf** que descargaste previamente de la carpeta "laboratorio pdf" para que puedas descargar más pdfs
 
-La salida queda en el documento excel "salida/Salida con resultados de examenes.xlsx" listo para imprimir. Luego de imprimir el documento elimina los 3 documentos que se crearon en la carpeta, deja solo el documento que dice "Salida en blanco.xlsx" porque el programa utiliza ese archivo para crear una copia.
+### Antes de usar la primera vez
+1) Descarga el archivo "lector_lab_v2.3.zip" desde https://drive.google.com/drive/folders/1FOo07qSXZFGCe7Yr27_Hqn-yNu6RSnbj?usp=sharing
+2) Descomprime el archivo en una carpeta (de preferencia en el escritorio para que sea más fácil acceder a ella)
+3) elimina el único archivo que viene en la carpeta "laboratorio pdf"
+
 
 ### Algunas cosas nuevas:
-- Se agrega VHS
+- Se agrega VHS y PCR
 - Ya no debería copiar datos de orina, pero si de liquido pleural o ascítico :( proximamente podría arreglarlo
+- Ahora entrega las columnas ordenadas de buena forma
+- Los valores con separadores de miles (ej 1.000) ahora se guardan bien en excel 
 
+
+-------------------
 ## Cómo usar lector_lab_v1.1
 Descarga los pdf de los examenes en la carpeta "laboratorio pdf". 
 
